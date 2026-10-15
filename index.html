@@ -1,31 +1,498 @@
 <!doctype html>
-<html lang="ru" data-stub>
+<html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Каталог б/у шин и дисков · демо готовится</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="120">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ШинаБаза · б/у шины и диски с фото и состоянием – демо каталога</title>
+<meta name="description" content="Демо-концепт каталога б/у шин и дисков: подбор по размеру, фильтры, состояние каждого экземпляра, SEO-слой, заказ.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f4f2ee">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231c1d1f'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23d2451e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Manrope:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Onest:wght@400;500;600&family=Carlito:ital,wght@1,700&display=swap">
+<script type="application/ld+json" id="ld">{"@context":"https://schema.org","@type":"WebSite","name":"ШинаБаза","description":"Каталог б/у шин и дисков"}</script>
 <style>
-:root{--bg:#F6F3EE;--ink:#1F1E1C;--muted:#6B655C;--acc:#8A6737}
-@media (prefers-color-scheme:dark){:root{--bg:#161615;--ink:#EDE7DC;--muted:#A9A195;--acc:#C9A66B}}
-*{box-sizing:border-box}html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Manrope,system-ui,sans-serif;display:grid;place-items:center;padding:24px}
-main{max-width:560px;text-align:center;display:flex;flex-direction:column;gap:18px;align-items:center}
-.k{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600}
-h1{font:500 clamp(2rem,6vw,3rem)/1.1 "Cormorant Garamond",Georgia,serif;margin:0;text-wrap:balance}
-p{margin:0;color:var(--muted)}
-.bar{width:220px;height:3px;background:color-mix(in srgb,var(--acc) 20%,transparent);border-radius:3px;overflow:hidden}
-.bar i{display:block;height:100%;width:40%;background:var(--acc);animation:m 1.6s ease-in-out infinite}
-@keyframes m{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
-@media (prefers-reduced-motion:reduce){.bar i{animation:none;width:60%}}
+:root{--bg:#f4f2ee;--panel:#ffffff;--ink:#1c1d1f;--mut:#5f6166;--line:#dcd8cf;--acc:#d2451e;--acc2:#a8340f;--ok:#2e7d4f;--warn:#b7791f;--bad:#8a8a8a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{width:min(1240px,100% - 32px);margin-inline:auto}
+h1,h2,h3{font-family:Oswald,Onest,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.02em;line-height:1.1;margin:0;text-wrap:balance}
+.k{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc2);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:10px;border:2px solid var(--ink);background:var(--ink);color:#fff;font-weight:600;text-decoration:none;transition:transform .15s,background .2s;text-align:center}
+.btn:hover{transform:translateY(-2px);background:var(--acc);border-color:var(--acc)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.acc{background:var(--acc);border-color:var(--acc)}
+.btn.acc:hover{background:var(--acc2);border-color:var(--acc2)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+
+.top{position:sticky;top:0;z-index:30;background:rgb(244 242 238/.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:22px;height:62px}
+.brand{font:700 1.35rem/1 Oswald,sans-serif;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.brand i{width:26px;height:26px;border-radius:50%;background:var(--ink);display:grid;place-items:center}
+.brand i::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--acc)}
+.nav{display:flex;gap:20px;margin-left:auto;font-weight:500;font-size:.95rem}
+.nav a{text-decoration:none;color:var(--mut)}
+.nav a:hover,.nav a.on{color:var(--ink)}
+.nav a.on{border-bottom:2px solid var(--acc)}
+.seo-toggle{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-size:.85rem;font-weight:600;white-space:nowrap}
+.seo-toggle[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.hero{padding:clamp(34px,6vw,76px) 0 clamp(28px,4vw,48px)}
+.hero h1{font-size:clamp(2rem,5.6vw,4rem);max-width:18ch}
+.hero p.lead{max-width:60ch;color:var(--mut);font-size:1.08rem;margin:18px 0 0}
+.finder{margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;align-items:end;box-shadow:0 14px 34px rgb(0 0 0/.06)}
+.finder .ttl{grid-column:1/-1;font:700 1.05rem/1 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.04em}
+label.f{display:block;font-size:.76rem;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+label.f select,label.f input{display:block;width:100%;margin-top:6px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;outline:0;font-size:.98rem;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+label.f select:focus,label.f input:focus{border-color:var(--acc)}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.fact b{display:block;font:700 1.5rem/1 Oswald,sans-serif;color:var(--acc);margin-bottom:6px}
+.fact span{color:var(--mut);font-size:.9rem}
+
+.sec{padding:clamp(28px,4vw,52px) 0}
+.sec h2{font-size:clamp(1.5rem,3.4vw,2.2rem)}
+.crumbs{font-size:.85rem;color:var(--mut);margin-bottom:14px}
+.crumbs a{text-decoration:none}.crumbs a:hover{color:var(--acc)}
+.cat{display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;margin-top:20px;align-items:start}
+.filters{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:12px;position:sticky;top:78px}
+.filters h3{font-size:1.05rem}
+.chk{display:flex;gap:8px;align-items:center;font-size:.92rem}
+.chk input{accent-color:var(--acc);width:18px;height:18px}
+.range{display:flex;justify-content:space-between;font-size:.85rem;color:var(--mut)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.tabs{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{border:0;background:none;border-radius:8px;padding:9px 18px;font-weight:600}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.cnt{color:var(--mut);font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,235px),1fr));gap:14px;margin-top:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative}
+.card:hover{transform:translateY(-3px);border-color:#b9b4a8;box-shadow:0 14px 28px rgb(0 0 0/.08)}
+.card .im{aspect-ratio:1/1;background:linear-gradient(160deg,#ebe7de,#d9d4c7);display:grid;place-items:center;position:relative}
+.card .im svg{width:80%;height:80%}
+.badge{position:absolute;left:10px;top:10px;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:var(--ok);color:#fff}
+.badge.res{background:var(--warn)}.badge.sold{background:var(--bad)}
+.card.sold{opacity:.72}
+.card .bd{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font:600 1rem/1.25 Onest,sans-serif;text-transform:none;letter-spacing:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.78rem;background:#eeeae1;border-radius:6px;padding:3px 8px;color:#3b3d41}
+.cond{display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--mut)}
+.bar{flex:1;height:6px;background:#e6e1d6;border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc)}
+.card .pr{margin-top:auto;padding-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.card .pr b{font:700 1.3rem/1 Oswald,sans-serif}
+.card .pr small{color:var(--mut)}
+.empty{grid-column:1/-1;text-align:center;color:var(--mut);padding:50px 10px}
+
+.item{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:26px;margin-top:10px}
+.gal .main{aspect-ratio:1/1;background:linear-gradient(160deg,#ebe7de,#d9d4c7);border-radius:18px;display:grid;place-items:center;position:relative}
+.gal .main svg{width:82%;height:82%}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.thumbs button{border:2px solid transparent;border-radius:10px;background:#e4dfd3;padding:0;aspect-ratio:1/1;display:grid;place-items:center}
+.thumbs button[aria-pressed=true]{border-color:var(--acc)}
+.thumbs svg{width:78%;height:78%}
+.gal .note{font-size:.82rem;color:var(--mut);margin-top:8px}
+.spec{width:100%;border-collapse:collapse;margin:14px 0}
+.spec td{padding:9px 0;border-bottom:1px solid var(--line);font-size:.96rem}
+.spec td:first-child{color:var(--mut);width:46%}
+.price{font:700 2.1rem/1 Oswald,sans-serif;margin:14px 0 4px}
+.avail{display:inline-flex;gap:8px;align-items:center;font-weight:600}
+.avail i{width:10px;height:10px;border-radius:50%;background:var(--ok)}
+.avail.res i{background:var(--warn)}.avail.sold i{background:var(--bad)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.form{display:grid;gap:10px;margin-top:12px}
+.in{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;outline:0}
+.in:focus{border-color:var(--acc)}
+.err{color:#b3261e;font-size:.88rem;min-height:1.1em}
+.ok{background:#e8f4ec;border:1px solid #bcdcc7;border-radius:12px;padding:12px 14px;font-size:.92rem}
+.tg{background:#1b2733;color:#dbe6ef;border-radius:12px;padding:12px 14px;white-space:pre-wrap;font-size:.86rem;margin-top:10px}
+
+.plan .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.plan h3{font-size:1.1rem;margin-bottom:10px}
+.plan ul,.plan ol{margin:0;padding-left:20px;color:#3b3d41}
+.plan li{margin:0 0 6px}
+.tree{font:13px/1.7 ui-monospace,Consolas,monospace;background:#1c1d1f;color:#e7e3d8;border-radius:12px;padding:14px 16px;overflow:auto;white-space:pre}
+
+.seo{position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#1c1d1f;color:#e7e3d8;border-radius:14px;padding:14px 16px;font:12.5px/1.6 ui-monospace,Consolas,monospace;box-shadow:0 14px 40px rgb(0 0 0/.35);max-height:42vh;overflow:auto;display:none}
+.seo.on{display:block}
+.seo b{color:#ffb38f;font-weight:600}
+.seo div{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px;margin:2px 0;word-break:break-word}
+.seo .h{font:700 12px/1 Oswald,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9a968b;margin-bottom:6px;display:block}
+
+.foot{border-top:1px solid var(--line);padding:26px 0 36px;margin-top:20px}
+.foot .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+.foot__made{color:var(--mut);font-style:italic}
+.foot__made a{font-family:Calibri,Carlito,sans-serif;font-weight:700;font-style:italic;font-size:1.12em;margin-left:.3em;color:var(--ink);text-decoration:none}
+.foot__made a:hover{text-decoration:underline}
+.foot__made img{display:inline-block;width:40px;height:52px;vertical-align:-7px;margin-left:6px}
+.foot__demo{flex-basis:100%;color:var(--mut);font-size:14px}
+.toast{position:fixed;left:50%;bottom:20px;translate:-50% 20px;opacity:0;z-index:60;background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;font-weight:600;font-size:.92rem;pointer-events:none;transition:opacity .25s,translate .25s;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;translate:-50% 0}
+.mf{display:none}
+@media (max-width:980px){
+  .cat{grid-template-columns:minmax(0,1fr)}
+  .filters{position:static}
+  .item{grid-template-columns:minmax(0,1fr)}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plan .cols{grid-template-columns:minmax(0,1fr)}
+  .nav{display:none}
+  .seo-toggle{margin-left:auto}
+}
+@media (max-width:480px){
+  .finder{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tabs button{padding:9px 12px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
-<body><main>
-<div class="k">Демо-версия по вашему ТЗ</div>
-<h1>Каталог б/у шин и дисков</h1>
-<div class="bar" aria-hidden="true"><i></i></div>
-<p>Сайт сейчас собирается по вашему техническому заданию.<br>Будет готов сегодня к <b>10:35</b> – по этой же ссылке.</p>
-<p style="font-size:.85rem">Страница обновится сама.</p>
-</main></body></html>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#/"><i></i>ШинаБаза</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#/shiny" data-nav="shiny">Шины</a>
+      <a href="#/diski" data-nav="diski">Диски</a>
+      <a href="#/plan" data-nav="plan">План работ</a>
+    </nav>
+    <button class="seo-toggle" id="seoBtn" type="button" aria-pressed="false">SEO-слой: выкл</button>
+  </div>
+</header>
+
+<main id="view"></main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span><b>ШинаБаза</b> · б/у шины и диски с реальными фото</span>
+    <span class="foot__made">Создан в <a href="https://web-atelie.ru/">«Веб-Ателье»</a><img src="assets/web-atelie.png" alt=""></span>
+    <span class="foot__demo">Демо-концепт каталога б/у шин и дисков. Название, цены, остатки и «фотографии» условные: изображения нарисованы автоматически, формы заказа только имитируют отправку.</span>
+  </div>
+</footer>
+
+<aside class="seo" id="seo" aria-label="SEO-слой"></aside>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var rub=function(n){return Math.round(n).toLocaleString('ru-RU').replace(/ | /g,' ')+' ₽'};
+
+/* ---------- данные ---------- */
+var seed=11;function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
+function pick(a){return a[Math.floor(rnd()*a.length)]}
+var TB=['Michelin','Bridgestone','Nokian','Continental','Pirelli','Yokohama','Goodyear','Hankook','Toyo','Cordiant'];
+var SEAS=['лето','зима (шипы)','зима (липучка)','всесезон'];
+var WB=['OZ','Replay','Skad','K&K','Tech-Line','LS','Khomen'];
+var WT=['литой','штампованный','кованый'];
+var PCD=['4x100','5x100','5x112','5x114.3','5x108','5x120'];
+var PRODUCTS=[];
+(function(){
+  var id=1;
+  var sizes=[[175,65,14],[185,65,15],[195,65,15],[195,55,16],[205,55,16],[205,60,16],[215,60,16],[215,55,17],[225,45,17],[225,50,17],[235,55,18],[245,45,18],[205,65,15],[185,60,14],[215,65,16],[225,60,17]];
+  for(var i=0;i<34;i++){
+    var s=pick(sizes),season=pick(SEAS),brand=pick(TB),tread=Math.round((3+rnd()*4.8)*10)/10,year=2017+Math.floor(rnd()*8);
+    var qty=pick([1,2,2,4,4,4]);
+    var unit=Math.round((1200+s[2]*180+tread*260+(brand==='Michelin'||brand==='Nokian'?900:0))/50)*50;
+    var st=rnd()<.12?'sold':(rnd()<.14?'res':'in');
+    PRODUCTS.push({id:id++,kind:'shiny',brand:brand,model:pick(['Energy','Turanza','Hakkapeliitta','Alpin','P Zero','Ice','Blizzak','Premium','Nordman','WinterContact']),w:s[0],p:s[1],d:s[2],season:season,tread:tread,year:year,qty:qty,unit:unit,price:unit*qty,state:st,score:Math.min(5,Math.max(2,Math.round(tread/1.6))),dmg:tread<4?'мелкие потёртости':(rnd()<.2?'небольшой порез протектора вне рабочей зоны':'без повреждений')});
+  }
+  var ws=[[15,6,'4x100',38],[15,6.5,'5x112',40],[16,6.5,'5x114.3',45],[16,7,'5x112',40],[17,7,'5x114.3',40],[17,7.5,'5x112',35],[17,7,'5x108',45],[18,8,'5x114.3',45],[18,8,'5x120',34],[16,6.5,'5x108',50],[15,6,'5x100',40],[17,7,'5x100',42]];
+  for(var j=0;j<26;j++){
+    var w=pick(ws),type=pick(WT),b=pick(WB);
+    var qty2=pick([2,4,4,4]);
+    var u=Math.round((900+w[0]*220+(type==='кованый'?2400:type==='литой'?900:0))/50)*50;
+    var st2=rnd()<.12?'sold':(rnd()<.14?'res':'in');
+    var dm=pick(['без повреждений','мелкие сколы краски','царапины бордюра, геометрия в норме','после прокатки, биения нет']);
+    PRODUCTS.push({id:id++,kind:'diski',brand:b,model:pick(['Sport','Classic','Aero','Star','Vision','Turbo']),d:w[0],j:w[1],pcd:w[2],et:w[3],cb:pick([54.1,56.1,57.1,60.1,66.1,67.1,72.6]),type:type,qty:qty2,unit:u,price:u*qty2,state:st2,score:dm==='без повреждений'?5:(dm.indexOf('царапины')===0?3:4),dmg:dm,year:2015+Math.floor(rnd()*9)});
+  }
+})();
+function byId(i){for(var k=0;k<PRODUCTS.length;k++)if(PRODUCTS[k].id===i)return PRODUCTS[k]}
+function title(p){return p.kind==='shiny'?p.brand+' '+p.model+' '+p.w+'/'+p.p+' R'+p.d:p.brand+' '+p.model+' R'+p.d+' '+p.j+'J '+p.pcd+' ET'+p.et}
+function stateName(s){return {in:'В наличии',res:'Резерв',sold:'Продано'}[s]}
+function qtyName(q){return q===4?'комплект 4 шт.':q===2?'пара 2 шт.':q+' шт.'}
+
+/* картинки: рисуем сами */
+function art(p,v){
+  v=v||0;
+  if(p.kind==='shiny'){
+    var worn=Math.max(.35,1-(p.tread-3)/6);
+    var rot=v*14;
+    var lugs='';for(var a=0;a<24;a++)lugs+='<rect x="96" y="14" width="8" height="'+(14+worn*10).toFixed(0)+'" rx="2" fill="#111" transform="rotate('+(a*15+rot)+' 100 100)"/>';
+    if(v===3) return '<svg viewBox="0 0 200 200" aria-hidden="true"><rect x="30" y="70" width="140" height="60" rx="8" fill="#222"/><g stroke="#e0a24a" stroke-width="3">'+[0,1,2,3,4,5].map(function(i){return '<path d="M'+(44+i*22)+' 78v44"/>'}).join('')+'</g><text x="100" y="152" text-anchor="middle" font-size="12" fill="#555" font-family="sans-serif">протектор: '+p.tread+' мм</text></svg>';
+    return '<svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="88" fill="#18191b"/>'+lugs+'<circle cx="100" cy="100" r="58" fill="#2b2d31"/><circle cx="100" cy="100" r="40" fill="#8d9096"/><circle cx="100" cy="100" r="12" fill="#2b2d31"/>'+(v===1?'<path d="M30 70a76 76 0 0 1 60-40" stroke="#fff" stroke-opacity=".25" stroke-width="5" fill="none"/>':'')+(v===2?'<text x="100" y="108" text-anchor="middle" font-size="13" fill="#e7e3d8" font-family="sans-serif">'+p.w+'/'+p.p+' R'+p.d+'</text>':'')+'</svg>';
+  }
+  var type=p.type, col=type==='кованый'?'#b9bcc2':type==='литой'?'#a7abb2':'#5d6168';
+  var spokes='';var n=p.pcd.charAt(0)==='4'?4:5;
+  for(var k=0;k<n;k++){var a2=k*360/n+v*8;spokes+='<path d="M92 20h16l-4 62h-8z" fill="'+col+'" transform="rotate('+a2+' 100 100)"/>'}
+  var bolts='';for(var b=0;b<n;b++){var an=(b*360/n+v*8)*Math.PI/180;bolts+='<circle cx="'+(100+Math.sin(an)*20).toFixed(1)+'" cy="'+(100-Math.cos(an)*20).toFixed(1)+'" r="3.4" fill="#2b2d31"/>'}
+  return '<svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="86" fill="#888c93"/><circle cx="100" cy="100" r="78" fill="#2b2d31"/><circle cx="100" cy="100" r="70" fill="#c3c6cc"/>'+(type==='штампованный'?'<circle cx="100" cy="100" r="62" fill="#5d6168"/>'+[0,1,2,3,4,5,6,7].map(function(i){var q=i*45*Math.PI/180;return '<circle cx="'+(100+Math.sin(q)*42).toFixed(1)+'" cy="'+(100-Math.cos(q)*42).toFixed(1)+'" r="8" fill="#2b2d31"/>'}).join(''):spokes)+'<circle cx="100" cy="100" r="22" fill="#2b2d31"/><circle cx="100" cy="100" r="10" fill="#d2451e"/>'+bolts+(v===1?'<path d="M26 80a76 76 0 0 1 40-44" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none"/>':'')+(v===3?'<text x="100" y="196" text-anchor="middle" font-size="11" fill="#555" font-family="sans-serif">'+p.pcd+' · ET'+p.et+' · '+p.j+'J</text>':'')+'</svg>';
+}
+
+/* ---------- состояние ---------- */
+var F={kind:'shiny',w:'',p:'',d:'',season:'',brand:'',minTread:3,maxPrice:80000,onlyIn:true,sort:'new',wd:'',pcd:'',type:'',q:''};
+var sentOrders=0;
+
+function filtered(){
+  var q=F.q.trim().toLowerCase().replace(/ё/g,'е');
+  var list=PRODUCTS.filter(function(x){
+    if(x.kind!==F.kind)return false;
+    if(F.onlyIn&&x.state==='sold')return false;
+    if(F.brand&&x.brand!==F.brand)return false;
+    if(x.price>F.maxPrice)return false;
+    if(x.kind==='shiny'){
+      if(F.w&&x.w!==+F.w)return false;if(F.p&&x.p!==+F.p)return false;if(F.d&&x.d!==+F.d)return false;
+      if(F.season&&x.season!==F.season)return false;if(x.tread<F.minTread)return false;
+    }else{
+      if(F.wd&&x.d!==+F.wd)return false;if(F.pcd&&x.pcd!==F.pcd)return false;if(F.type&&x.type!==F.type)return false;
+    }
+    if(q){var hay=(title(x)+' '+x.season+' '+x.type).toLowerCase();if(hay.indexOf(q)<0&&hay.replace(/[\s\/]/g,'').indexOf(q.replace(/[\s\/]/g,''))<0)return false}
+    return true;
+  });
+  list.sort(function(a,b){
+    if(F.sort==='price')return a.price-b.price;
+    if(F.sort==='price-d')return b.price-a.price;
+    if(F.sort==='cond')return b.score-a.score||b.year-a.year;
+    return b.id-a.id;
+  });
+  return list;
+}
+function uniq(kind,key){var s={};PRODUCTS.forEach(function(x){if(x.kind===kind&&x[key]!==undefined)s[x[key]]=1});return Object.keys(s).sort(function(a,b){return isNaN(a)||isNaN(b)?(a<b?-1:1):a-b})}
+function opts(arr,cur,all){return '<option value="">'+all+'</option>'+arr.map(function(v){return '<option value="'+esc(v)+'"'+(String(cur)===String(v)?' selected':'')+'>'+esc(v)+'</option>'}).join('')}
+
+/* ---------- страницы ---------- */
+function cardHtml(x){
+  var cond=x.kind==='shiny'?'остаток '+x.tread+' мм':'состояние '+x.score+'/5';
+  var chips=x.kind==='shiny'
+    ?'<span class="chip">'+x.w+'/'+x.p+' R'+x.d+'</span><span class="chip">'+esc(x.season)+'</span><span class="chip">'+x.year+' г.</span>'
+    :'<span class="chip">R'+x.d+' · '+x.j+'J</span><span class="chip">'+x.pcd+'</span><span class="chip">ET'+x.et+'</span><span class="chip">'+esc(x.type)+'</span>';
+  var pct=x.kind==='shiny'?Math.min(100,Math.round(x.tread/8*100)):x.score*20;
+  return '<a class="card'+(x.state==='sold'?' sold':'')+'" href="#/tovar/'+x.id+'">'+
+    '<div class="im">'+art(x,0)+'<span class="badge '+x.state+'">'+stateName(x.state)+'</span></div>'+
+    '<div class="bd"><h3>'+esc(title(x))+'</h3><div class="meta">'+chips+'</div>'+
+    '<div class="cond"><span>'+cond+'</span><span class="bar"><i style="width:'+pct+'%"></i></span></div>'+
+    '<div class="pr"><b>'+rub(x.price)+'</b><small>'+qtyName(x.qty)+'</small></div></div></a>';
+}
+function viewHome(){
+  var tw=uniq('shiny','w'),tp=uniq('shiny','p'),td=uniq('shiny','d');
+  return '<section class="hero"><div class="wrap">'+
+    '<div class="k">Каталог б/у шин и дисков</div>'+
+    '<h1>Колёса с реальными фото и честным состоянием</h1>'+
+    '<p class="lead">Каждый экземпляр сфотографирован, измерен и описан: остаток протектора, год, повреждения. Подбор по размеру шины или параметрам диска.</p>'+
+    '<form class="finder" id="finder"><div class="ttl">Подбор шин по размеру</div>'+
+    '<label class="f">Ширина<select name="w">'+opts(tw,'','любая')+'</select></label>'+
+    '<label class="f">Профиль<select name="p">'+opts(tp,'','любой')+'</select></label>'+
+    '<label class="f">Диаметр<select name="d">'+opts(td,'','любой')+'</select></label>'+
+    '<label class="f">Сезон<select name="season">'+opts(SEAS,'','любой')+'</select></label>'+
+    '<button class="btn acc" type="submit">Показать</button></form>'+
+    '<div class="facts"><div class="fact"><b>'+PRODUCTS.filter(function(x){return x.state!=='sold'}).length+'</b><span>позиций в наличии</span></div>'+
+    '<div class="fact"><b>4 фото</b><span>на каждый экземпляр</span></div>'+
+    '<div class="fact"><b>от 3 мм</b><span>остаток протектора указан честно</span></div>'+
+    '<div class="fact"><b>1 день</b><span>резерв по звонку или заявке</span></div></div>'+
+    '</div></section>'+
+    '<section class="sec"><div class="wrap"><div class="k">Свежие поступления</div><h2>Новые позиции</h2><div class="grid">'+
+    PRODUCTS.filter(function(x){return x.state==='in'}).sort(function(a,b){return b.id-a.id}).slice(0,8).map(cardHtml).join('')+'</div>'+
+    '<p style="margin-top:18px"><a class="btn ghost" href="#/shiny">Все шины</a> <a class="btn ghost" href="#/diski">Все диски</a></p></div></section>';
+}
+function filtersHtml(){
+  if(F.kind==='shiny'){
+    return '<h3>Фильтры: шины</h3>'+
+      '<label class="f">Ширина<select data-f="w">'+opts(uniq('shiny','w'),F.w,'любая')+'</select></label>'+
+      '<label class="f">Профиль<select data-f="p">'+opts(uniq('shiny','p'),F.p,'любой')+'</select></label>'+
+      '<label class="f">Диаметр R<select data-f="d">'+opts(uniq('shiny','d'),F.d,'любой')+'</select></label>'+
+      '<label class="f">Сезон<select data-f="season">'+opts(SEAS,F.season,'любой')+'</select></label>'+
+      '<label class="f">Бренд<select data-f="brand">'+opts(TB,F.brand,'любой')+'</select></label>'+
+      '<label class="f">Остаток протектора от: <b id="trv">'+F.minTread+'</b> мм<input type="range" data-f="minTread" min="3" max="7" step="0.5" value="'+F.minTread+'"></label>';
+  }
+  return '<h3>Фильтры: диски</h3>'+
+    '<label class="f">Диаметр R<select data-f="wd">'+opts(uniq('diski','d'),F.wd,'любой')+'</select></label>'+
+    '<label class="f">PCD (болты)<select data-f="pcd">'+opts(PCD,F.pcd,'любой')+'</select></label>'+
+    '<label class="f">Тип<select data-f="type">'+opts(WT,F.type,'любой')+'</select></label>'+
+    '<label class="f">Бренд<select data-f="brand">'+opts(WB,F.brand,'любой')+'</select></label>';
+}
+function viewCatalog(){
+  var list=filtered();
+  var h='<section class="sec"><div class="wrap"><div class="crumbs"><a href="#/">Главная</a> / '+(F.kind==='shiny'?'Шины':'Диски')+'</div>'+
+    '<h1 style="font-size:clamp(1.6rem,3.6vw,2.4rem)">Б/у '+(F.kind==='shiny'?'шины':'диски')+(F.kind==='shiny'&&F.w&&F.p&&F.d?' '+F.w+'/'+F.p+' R'+F.d:'')+'</h1>'+
+    '<div class="cat"><aside class="filters" id="filters">'+filtersHtml()+
+    '<label class="f">Цена до: <b id="prv">'+rub(F.maxPrice)+'</b><input type="range" data-f="maxPrice" min="5000" max="80000" step="1000" value="'+F.maxPrice+'"></label>'+
+    '<label class="chk"><input type="checkbox" data-f="onlyIn"'+(F.onlyIn?' checked':'')+'> Скрыть проданные</label>'+
+    '<button class="btn ghost" id="reset" type="button">Сбросить</button></aside>'+
+    '<div><div class="toolbar"><div class="tabs" role="tablist"><button role="tab" data-kind="shiny" aria-selected="'+(F.kind==='shiny')+'">Шины</button><button role="tab" data-kind="diski" aria-selected="'+(F.kind==='diski')+'">Диски</button></div>'+
+    '<label class="f" style="min-width:200px;flex:1;max-width:340px"><input data-f="q" type="search" placeholder="Поиск: 205/55 R16, Nokian, литой…" value="'+esc(F.q)+'" style="margin-top:0"></label>'+
+    '<label class="f" style="min-width:170px">Сортировка<select data-f="sort"><option value="new"'+(F.sort==='new'?' selected':'')+'>Новые</option><option value="price"'+(F.sort==='price'?' selected':'')+'>Дешевле</option><option value="price-d"'+(F.sort==='price-d'?' selected':'')+'>Дороже</option><option value="cond"'+(F.sort==='cond'?' selected':'')+'>Лучшее состояние</option></select></label></div>'+
+    '<div class="cnt" id="cnt" style="margin-top:10px">Найдено: '+list.length+'</div>'+
+    '<div class="grid" id="grid">'+(list.length?list.map(cardHtml).join(''):'<div class="empty">Ничего не нашли. Сбросьте фильтры или оставьте заявку на подбор.</div>')+'</div></div></div></div></section>';
+  return h;
+}
+function similar(p){
+  return PRODUCTS.filter(function(x){return x.kind===p.kind&&x.id!==p.id&&x.state!=='sold'&&(p.kind==='shiny'?(x.d===p.d):(x.d===p.d||x.pcd===p.pcd))}).slice(0,4);
+}
+function viewItem(id){
+  var p=byId(id);
+  if(!p)return view404();
+  var rows=p.kind==='shiny'
+    ?[['Размер',p.w+'/'+p.p+' R'+p.d],['Сезон',p.season],['Бренд / модель',p.brand+' '+p.model],['Остаток протектора',p.tread+' мм'],['Год выпуска',p.year],['Количество',qtyName(p.qty)],['Состояние',p.score+' из 5'],['Повреждения',p.dmg]]
+    :[['Диаметр / ширина','R'+p.d+' / '+p.j+'J'],['PCD (болты)',p.pcd],['Вылет ET',p.et],['Центральное отверстие',p.cb+' мм'],['Тип',p.type],['Бренд / модель',p.brand+' '+p.model],['Количество',qtyName(p.qty)],['Состояние',p.score+' из 5'],['Повреждения',p.dmg]];
+  var sold=p.state==='sold';
+  var h='<section class="sec"><div class="wrap"><div class="crumbs"><a href="#/">Главная</a> / <a href="#/'+p.kind+'">'+(p.kind==='shiny'?'Шины':'Диски')+'</a> / '+esc(title(p))+'</div>'+
+    '<div class="item"><div class="gal"><div class="main" id="gmain">'+art(p,0)+'<span class="badge '+p.state+'">'+stateName(p.state)+'</span></div>'+
+    '<div class="thumbs" id="thumbs">'+[0,1,2,3].map(function(v){return '<button type="button" data-v="'+v+'" aria-pressed="'+(v===0)+'" aria-label="Фото '+(v+1)+'">'+art(p,v)+'</button>'}).join('')+'</div>'+
+    '<div class="gal note">В рабочей версии здесь реальные фото именно этого экземпляра. В демо изображения нарисованы автоматически.</div></div>'+
+    '<div><h1 style="font-size:clamp(1.5rem,3vw,2.1rem)">'+esc(title(p))+'</h1>'+
+    '<div class="price">'+rub(p.price)+' <small style="font:500 .95rem Onest;color:var(--mut)">'+qtyName(p.qty)+' · '+rub(p.unit)+' за шт.</small></div>'+
+    '<div class="avail '+p.state+'"><i></i>'+stateName(p.state)+'</div>'+
+    '<table class="spec">'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+esc(r[1])+'</td></tr>'}).join('')+'</table>'+
+    (sold?'<div class="box"><b>Этот экземпляр продан.</b><p style="margin:6px 0 0;color:var(--mut)">Страница остаётся для поиска и ведёт на похожие позиции. Для поисковика она закрыта от индексации (см. SEO-слой).</p></div>'
+    :'<div class="box" id="orderBox"><b>Заказать или зарезервировать</b><form class="form" id="orderForm"><input class="in" name="name" placeholder="Имя"><input class="in" name="phone" inputmode="tel" placeholder="Телефон">'+
+      '<label class="chk"><input type="checkbox" name="ok"> Согласен на обработку персональных данных (демо, данные не отправляются)</label><div class="err" id="oerr" role="alert"></div>'+
+      '<button class="btn acc" type="submit">'+(p.state==='res'?'Встать в очередь':'Оставить заявку')+'</button></form></div>')+
+    '</div></div>'+
+    '<h2 style="margin-top:34px;font-size:1.4rem">Похожие в наличии</h2><div class="grid">'+similar(p).map(cardHtml).join('')+'</div></div></section>';
+  return h;
+}
+function viewPlan(){
+  return '<section class="sec plan"><div class="wrap"><div class="crumbs"><a href="#/">Главная</a> / План работ</div>'+
+    '<div class="k">Как ведём проект</div><h1 style="font-size:clamp(1.6rem,3.6vw,2.4rem)">От структуры до измеримого потока заявок</h1>'+
+    '<p style="color:var(--mut);max-width:70ch;margin-top:12px">Это демо показывает, как работает каталог. Ниже: что и в каком порядке делается по каждому пункту ТЗ.</p>'+
+    '<div class="cols"><div class="box"><h3>Этапы</h3><ol><li><b>Проектирование.</b> Структура каталога, карточка товара, поля состояния, сбор запросов и SEO-структура страниц.</li><li><b>Разработка.</b> Мобильный каталог с фильтрами по размеру шин и параметрам дисков, карточки, формы заказа.</li><li><b>Наполнение.</b> Импорт товаров из таблицы, проверка фото и состояния.</li><li><b>Аналитика и индексация.</b> Яндекс.Метрика, цели, Вебмастер, карта сайта, правила для фильтров и проданных товаров.</li><li><b>Передача.</b> Инструкция и обучение сотрудника обновлять ассортимент.</li><li><b>SEO-сопровождение</b> отдельным этапом и сметой.</li></ol></div>'+
+    '<div class="box"><h3>Как устроены адреса и индексация</h3><div class="tree">/shiny/                      каталог шин (индексируется)\n/shiny/205-55-r16/          размерная страница (индексируется)\n/shiny/205-55-r16/zima/     фильтр с трафиком (индексируется)\n/shiny/?sort=price&amp;...      сортировка и мелкие фильтры (noindex, canonical)\n/diski/                     каталог дисков\n/diski/r16-5x114-3/         страница по параметрам\n/tovar/&lt;id&gt;/               карточка (в наличии: индекс)\n/tovar/&lt;id&gt;/ (продано)     noindex + ссылки на похожие</div></div>'+
+    '<div class="box"><h3>Обновление ассортимента</h3><ul><li>Импорт из таблицы CSV/Excel: размеры, остаток, фото, цена.</li><li>Статусы «в наличии / резерв / продано» меняются без правки страниц.</li><li>Интеграция с учётной системой возможна после согласования источника данных.</li></ul></div>'+
+    '<div class="box"><h3>Что измеряем после запуска</h3><ul><li>Заявки с карточек и звонки (цели Метрики).</li><li>Доля трафика из поиска и число страниц в индексе.</li><li>Позиции по группам запросов (без гарантий мест).</li><li>Скорость загрузки и доля мобильных посетителей.</li><li>Доля заявок на проданные позиции.</li></ul></div>'+
+    '<div class="box"><h3>Что не входит</h3><ul><li>Фотосъёмка товаров (её делает магазин по инструкции).</li><li>Рекламные кампании и закупка трафика.</li><li>Гарантии конкретных позиций в поиске.</li></ul></div>'+
+    '<div class="box"><h3>Передача доступов</h3><ul><li>Домен и хостинг оформляются на владельца.</li><li>Кабинеты Метрики и Вебмастера создаются на аккаунт владельца, подрядчик получает гостевой доступ.</li><li>Исходники и инструкция передаются при сдаче.</li></ul></div></div></div></section>';
+}
+function view404(){return '<section class="sec"><div class="wrap" style="text-align:center;padding:50px 0"><div style="font:700 clamp(5rem,18vw,10rem)/1 Oswald;color:var(--acc)">404</div><h1 style="font-size:1.6rem">Страницы нет</h1><p style="color:var(--mut)">Возможно, товар уже продан или ссылка устарела.</p><p><a class="btn" href="#/shiny">В каталог</a></p></div></section>'}
+
+/* ---------- SEO-слой ---------- */
+var seoOn=false;
+function setLD(obj){ $('#ld').textContent=JSON.stringify(obj) }
+function seoInfo(r){
+  var t,d,canon,robots='index, follow',h1,note='';
+  if(r.name==='404')return {t:'404 — страница не найдена',d:'',canon:'—',robots:'noindex',h1:'404',note:'Сервер отдаёт код 404, страница не попадает в индекс'};
+  if(r.name==='home'){t='Б/у шины и диски с фото и состоянием — ШинаБаза';d='Каталог б/у шин и дисков для легковых авто. Остаток протектора и состояние каждого экземпляра.';canon='/';h1='Колёса с реальными фото и честным состоянием'}
+  else if(r.name==='plan'){t='План работ — ШинаБаза';d='Этапы, индексация, аналитика и передача доступов.';canon='/plan/';h1='От структуры до измеримого потока заявок'}
+  else if(r.name==='item'){
+    var p=byId(r.id); if(!p) return {t:'404',d:'',canon:'—',robots:'noindex',h1:'—',note:'страница не найдена, отдаётся код 404'};
+    t=title(p)+' — купить б/у, '+rub(p.price);d=(p.kind==='shiny'?'Остаток протектора '+p.tread+' мм':'Состояние '+p.score+'/5')+', '+qtyName(p.qty)+', '+stateName(p.state).toLowerCase()+'.';
+    canon='/tovar/'+p.id+'/';h1=title(p);
+    if(p.state==='sold'){robots='noindex, follow';note='Продано: страница закрыта от индекса, остаются ссылки на похожие позиции'}
+    setLD({'@context':'https://schema.org','@type':'Product','name':title(p),'brand':{'@type':'Brand','name':p.brand},'itemCondition':'https://schema.org/UsedCondition','offers':{'@type':'Offer','price':p.price,'priceCurrency':'RUB','availability':p.state==='sold'?'https://schema.org/SoldOut':'https://schema.org/InStock'}});
+  }else{
+    var isS=F.kind==='shiny';
+    var sizePage=isS&&F.w&&F.p&&F.d, params=[];
+    if(F.sort!=='new')params.push('sort');if(F.q)params.push('q');if(F.maxPrice<80000)params.push('price');if(F.minTread>3)params.push('tread');
+    var base=isS?(sizePage?'/shiny/'+F.w+'-'+F.p+'-r'+F.d+'/'+(F.season?(F.season.indexOf('зима')===0?'zima/':F.season==='лето'?'leto/':'vsesezon/'):''):'/shiny/'):(F.wd&&F.pcd?'/diski/r'+F.wd+'-'+F.pcd.replace('.','-')+'/':'/diski/');
+    t=(isS?'Б/у шины'+(sizePage?' '+F.w+'/'+F.p+' R'+F.d:''):'Б/у диски'+(F.wd?' R'+F.wd:''))+' — каталог, цены и состояние';
+    d='Каталог с фильтрами. Остаток протектора, год, повреждения и фото каждого экземпляра.';
+    canon=base;h1='Б/у '+(isS?'шины':'диски');
+    if(params.length){robots='noindex, follow';note='Параметры '+params.join(', ')+': не создают отдельных страниц в индексе, canonical ведёт на '+base}
+    else if(!sizePage&&isS&&(F.w||F.p||F.d)){robots='noindex, follow';note='Неполный размер: страница не нужна поиску, канонический адрес — '+base}
+    else note='Размерная страница: индексируется, есть текст и разметка товаров'
+    setLD({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Главная','item':'/'},{'@type':'ListItem','position':2,'name':isS?'Шины':'Диски','item':isS?'/shiny/':'/diski/'}]});
+  }
+  if(r.name==='home'||r.name==='plan') setLD({'@context':'https://schema.org','@type':'WebSite','name':'ШинаБаза','description':d});
+  return {t:t,d:d,canon:canon,robots:robots,h1:h1,note:note};
+}
+function renderSeo(r){
+  var i=seoInfo(r);
+  document.title=i.t.length>3?i.t:document.title;
+  var el=$('#seo');
+  el.innerHTML='<span class="h">Что видит поисковик (демо)</span>'+
+    '<div><b>title</b><span>'+esc(i.t)+'</span></div><div><b>description</b><span>'+esc(i.d)+'</span></div><div><b>H1</b><span>'+esc(i.h1)+'</span></div>'+
+    '<div><b>canonical</b><span>'+esc(i.canon)+'</span></div><div><b>robots</b><span>'+esc(i.robots)+'</span></div>'+(i.note?'<div><b>правило</b><span>'+esc(i.note)+'</span></div>':'')+
+    '<div><b>разметка</b><span>JSON-LD: '+(r.name==='item'?'Product + Offer (наличие, состояние)':r.name==='catalog'?'BreadcrumbList':'WebSite')+'</span></div>';
+}
+
+/* ---------- роутер ---------- */
+var route={name:'home'};
+function parse(){
+  var h=location.hash.replace(/^#/,'');
+  var m;
+  if(!h||h==='/')return {name:'home'};
+  if(h==='/shiny'){F.kind='shiny';return {name:'catalog'}}
+  if(h==='/diski'){F.kind='diski';return {name:'catalog'}}
+  if(h==='/plan')return {name:'plan'};
+  if((m=h.match(/^\/tovar\/(\d+)$/)))return {name:'item',id:+m[1]};
+  if(h.charAt(0)==='/')return {name:'404'};
+  return {name:'home'};
+}
+function render(){
+  route=parse();
+  var v=$('#view'),html;
+  if(route.name==='home')html=viewHome();
+  else if(route.name==='catalog')html=viewCatalog();
+  else if(route.name==='item')html=viewItem(route.id);
+  else if(route.name==='plan')html=viewPlan();
+  else html=view404();
+  v.innerHTML=html;
+  $$('.nav a').forEach(function(a){a.classList.toggle('on',(route.name==='catalog'&&a.dataset.nav===F.kind)||(route.name==='plan'&&a.dataset.nav==='plan'))});
+  renderSeo(route);
+  if(route.name!=='home')window.scrollTo(0,0);
+}
+function renderGridOnly(){
+  var list=filtered();
+  $('#cnt').textContent='Найдено: '+list.length;
+  $('#grid').innerHTML=list.length?list.map(cardHtml).join(''):'<div class="empty">Ничего не нашли. Сбросьте фильтры или оставьте заявку на подбор.</div>';
+  renderSeo(route);
+  var h1=$('h1'); if(h1&&route.name==='catalog')h1.textContent='Б/у '+(F.kind==='shiny'?'шины':'диски')+(F.kind==='shiny'&&F.w&&F.p&&F.d?' '+F.w+'/'+F.p+' R'+F.d:'');
+}
+var tt;function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){e.classList.remove('on')},2200)}
+
+/* ---------- события ---------- */
+document.addEventListener('submit',function(e){
+  var f=e.target;
+  if(f.id==='finder'){
+    e.preventDefault();
+    var d=new FormData(f);F.kind='shiny';F.w=d.get('w')||'';F.p=d.get('p')||'';F.d=d.get('d')||'';F.season=d.get('season')||'';
+    if(location.hash==='#/shiny')render();else location.hash='#/shiny';
+  }
+  if(f.id==='orderForm'){
+    e.preventDefault();
+    var d2=new FormData(f),n=(d2.get('name')||'').trim(),ph=String(d2.get('phone')||'').replace(/\D/g,'');
+    var er=$('#oerr');
+    if(n.length<2){er.textContent='Укажите имя.';return}
+    if(ph.length<10){er.textContent='Укажите телефон: минимум 10 цифр.';return}
+    if(!d2.get('ok')){er.textContent='Нужно согласие на обработку данных.';return}
+    var p=byId(route.id);sentOrders++;
+    var no=1000+sentOrders+Math.floor(Math.random()*80);
+    $('#orderBox').innerHTML='<div class="ok"><b>Заявка №'+no+' принята (демо)</b><br>Так выглядит уведомление менеджеру:</div><div class="tg">'+esc('🛞 Заявка №'+no+'\n'+title(p)+' · '+qtyName(p.qty)+'\nЦена: '+rub(p.price)+'\nКлиент: '+n+', '+d2.get('phone')+'\nЦель Метрики: order_item')+'</div>';
+  }
+});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  var k=t.closest('[data-kind]');
+  if(k){F.kind=k.dataset.kind;location.hash='#/'+F.kind;if(route.name==='catalog')render();return}
+  var th=t.closest('#thumbs button');
+  if(th){var p=byId(route.id);$('#gmain').innerHTML=art(p,+th.dataset.v)+'<span class="badge '+p.state+'">'+stateName(p.state)+'</span>';$$('#thumbs button').forEach(function(b){b.setAttribute('aria-pressed',String(b===th))});return}
+  if(t.id==='reset'){F={kind:F.kind,w:'',p:'',d:'',season:'',brand:'',minTread:3,maxPrice:80000,onlyIn:true,sort:'new',wd:'',pcd:'',type:'',q:''};render();return}
+  if(t.id==='seoBtn'){seoOn=!seoOn;t.setAttribute('aria-pressed',String(seoOn));t.textContent='SEO-слой: '+(seoOn?'вкл':'выкл');$('#seo').classList.toggle('on',seoOn);return}
+});
+function onFilter(e){
+  var t=e.target,k=t.dataset&&t.dataset.f; if(!k)return;
+  var v=t.type==='checkbox'?t.checked:t.value;
+  if(k==='minTread'){F.minTread=+v;$('#trv').textContent=v}
+  else if(k==='maxPrice'){F.maxPrice=+v;$('#prv').textContent=rub(+v)}
+  else F[k]=v;
+  renderGridOnly();
+}
+document.addEventListener('change',onFilter);
+document.addEventListener('input',function(e){var t=e.target;if(t.dataset&&(t.dataset.f==='q'||t.type==='range'))onFilter(e)});
+window.addEventListener('hashchange',render);
+
+render();
+})();
+</script>
+</body>
+</html>
